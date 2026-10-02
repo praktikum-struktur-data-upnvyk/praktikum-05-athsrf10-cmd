@@ -44,7 +44,7 @@ using namespace std;
 // persis, hanya saja ia juga memindahkan `s.top` dan membuang node-nya.
 
 void inisialisasi(Stack& s) {
-    s.top = nullptr;
+    s.top = nullptr; 
 }
 
 bool isEmpty(const Stack& s) {
@@ -71,21 +71,65 @@ string display(Stack& s) {
 
 // SOAL 1
 bool push(Stack& s, int nilai) {
-    return false;
+    Node* baru = new Node; 
+    baru->data = nilai; 
+    baru->next = s.top; 
+    s.top = baru; 
+    return true;
 }
 
 // SOAL 2
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if (s.top == nullptr) { 
+        return false; 
+    } 
+ 
+    Node* temp = s.top; 
+    nilai = s.top->data; 
+    s.top = s.top->next; 
+    delete temp; 
+    return true;
 }
 
 // SOAL 3
 void clear(Stack& s) {
+    while (s.top != nullptr) { 
+        Node* temp = s.top; 
+        s.top = s.top->next; 
+        delete temp; 
+    } 
 }
 
 // SOAL 4
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
+    Stack s; 
+    inisialisasi(s); 
+ 
+    for (char karakter : ekspresi) { 
+        if (karakter == '(' || karakter == '[' || karakter == '{') { 
+            push(s, karakter); 
+        } 
+        else if (karakter == ')' || karakter == ']' || karakter == '}') { 
+            if (isEmpty(s)) { 
+                clear(s); 
+                return false; 
+            } 
+ 
+            int atas; 
+            pop(s, atas); 
+ 
+            if ((karakter == ')' && atas != '(') || 
+                (karakter == ']' && atas != '[') || 
+                (karakter == '}' && atas != '{')) { 
+                clear(s); 
+                return false; 
+            } 
+        } 
+    } 
+    bool seimbang = isEmpty(s); 
+    clear(s); 
+
+    return seimbang;
 }
 
 // =============================================================================
